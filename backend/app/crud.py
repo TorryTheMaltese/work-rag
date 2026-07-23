@@ -33,3 +33,13 @@ def create_document_chunks(db: Session, document_id: int, chunks: list[str]) -> 
     for db_chunk in db_chunks:
         db.refresh(db_chunk)
     return db_chunks
+
+
+def search_similar_chunks(db: Session, query_embedding: list[float], limit: int = 3) -> list[DocumentChunk]:
+    statement = (
+        select(DocumentChunk)
+        .where(DocumentChunk.embedding.is_not(None))
+        .order_by(DocumentChunk.embedding.cosine_distance(query_embedding))
+        .limit(limit)
+        )
+    return list(db.scalars(statement).all())

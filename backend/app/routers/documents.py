@@ -8,6 +8,7 @@ from app import crud, schemas
 from app.database import get_db
 from app.services.pdf_service import extract_text_from_pdf
 from app.services.chunk_service import split_text_into_chunks
+from app.services.embedding_service import create_embedding
 
 
 BASE_DIR = Path(__file__).resolve().parents[3]
@@ -63,3 +64,10 @@ def upload_document(file: UploadFile = File(...), db: Session = Depends(get_db))
 
     finally:
         file.file.close()
+
+
+@router.post("/search", response_model=list[schemas.DocumentChunkRead])
+def search_similar_chunks(request: schemas.ChunkSearchRequest, db: Session = Depends(get_db)):
+    query_embedding = create_embedding(request.query)
+    chunks = crud.search_similar_chunks(db=db, query_embedding=query_embedding, limit=request.limit)
+    return chunks
