@@ -300,8 +300,8 @@ SUPABASE_STORAGE_BUCKET=
 
 ### v0.1 · 기본 프로젝트 구성
 
-- [ ] Vue 3 프로젝트 생성
-- [ ] FastAPI 프로젝트 생성
+- [x] Vue 3 프로젝트 생성
+- [x] FastAPI 프로젝트 생성
 - [ ] Docker Compose 구성
 - [ ] 프론트엔드와 백엔드 연결
 - [ ] 기본 채팅 화면 구현
