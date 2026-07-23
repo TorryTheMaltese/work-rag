@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session # type: ignore
 
 from app import crud, schemas
 from app.database import get_db
+from app.services.pdf_service import extract_text_from_pdf
 
 
 BASE_DIR = Path(__file__).resolve().parents[3]
@@ -42,6 +43,9 @@ def upload_document(file: UploadFile = File(...), db: Session = Depends(get_db))
             copyfileobj(file.file, buffer)
 
             document_data = schemas.DocumentCreate(filename=safe_filename)
+            extracted_text=extract_text_from_pdf(file_path)
+            print("추출된 글자 수: ", len(extracted_text))
+            print("추출된 결과 일부: ", extracted_text[:500])
 
             return crud.create_document(db=db, document=document_data)
         
