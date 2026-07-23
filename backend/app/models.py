@@ -7,3 +7,6 @@ class Document(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     filename: Mapped[str] = mapped_column()
+
+    def __repr__(self) -> str:
+        return f"<Document(id={self.id}, filename={self.filename!r})>"

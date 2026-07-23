@@ -1,7 +1,9 @@
 from fastapi import FastAPI
+from sqlalchemy import select # type: ignore
 
-import app.models
-from app.database import Base, engine
+from app.models import Document
+from app.database import Base, SessionLocal,engine
+from app.routers import documents
 
 
 app = FastAPI(
@@ -10,7 +12,7 @@ app = FastAPI(
     version="0.1.0"
 )
 
-
+app.include_router(documents.router)
 Base.metadata.create_all(bind=engine)
 
 
