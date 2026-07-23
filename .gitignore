@@ -72,7 +72,8 @@ postgres_data/
 # Uploads
 # ==========================
 
-uploads/
+uploads/*
+!uploads/.gitkeep
 
 # ==========================
 # Logs
