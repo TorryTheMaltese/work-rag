@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session # type: ignore
 from app import crud, schemas
 from app.database import get_db
 from app.services.pdf_service import extract_text_from_pdf
+from app.services.chunk_service import split_text_into_chunks
 
 
 BASE_DIR = Path(__file__).resolve().parents[3]
@@ -43,11 +44,14 @@ def upload_document(file: UploadFile = File(...), db: Session = Depends(get_db))
             copyfileobj(file.file, buffer)
 
             document_data = schemas.DocumentCreate(filename=safe_filename)
-            extracted_text=extract_text_from_pdf(file_path)
-            print("추출된 글자 수: ", len(extracted_text))
-            print("추출된 결과 일부: ", extracted_text[:500])
+            document = crud.create_document(db=db, document=document_data)
 
-            return crud.create_document(db=db, document=document_data)
+            extracted_text = extract_text_from_pdf(file_path)
+
+            chunks = split_text_into_chunks(extracted_text)
+            crud.create_document_chunks(db=db, document_id=document.id, chunks=chunks)  # document_id will be set after creating the document
+
+            return document
         
     except Exception:
         if file_path.exists():
