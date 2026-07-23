@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session # type: ignore
 
 from app.models import Document, DocumentChunk
 from app.schemas import DocumentCreate, DocumentChunkCreate
+from app.services.embedding_service import create_embedding
 
 def create_document(db: Session, document: DocumentCreate) -> Document:
     db_document = Document(filename=document.filename)
@@ -23,7 +24,8 @@ def create_document_chunks(db: Session, document_id: int, chunks: list[str]) -> 
         db_chunk = DocumentChunk(
             document_id=document_id,
             chunk_index=index,
-            chunk_text=chunk_text
+            chunk_text=chunk_text,
+            embedding=create_embedding(chunk_text)
         )
         db.add(db_chunk)
         db_chunks.append(db_chunk)
