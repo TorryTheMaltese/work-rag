@@ -38,3 +38,19 @@ class ChunkSearchResult(BaseModel):
     chunk_index: int
     chunk_text: str
     distance: float
+
+
+class ChatRequest(BaseModel):
+    question: str
+    limit: int = 3
+
+
+class ChatSource(BaseModel):
+    document_id: int
+    chunk_index: int
+    chunk_text: str
+
+class ChatResponse(BaseModel):
+    answer: str
+    question: str
+    sources: list[ChatSource]

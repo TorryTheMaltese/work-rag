@@ -3,7 +3,7 @@ from sqlalchemy import select # type: ignore
 
 from app.models import Document
 from app.database import Base, SessionLocal,engine
-from app.routers import documents
+from app.routers import documents, chat
 
 
 app = FastAPI(
@@ -13,6 +13,8 @@ app = FastAPI(
 )
 
 app.include_router(documents.router)
+app.include_router(chat.router)
+
 Base.metadata.create_all(bind=engine)
 
 
